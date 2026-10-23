@@ -1,11 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Movies</title>
+  <link rel="stylesheet" href="/styles.css">
 </head>
-<body>
-    
+<body class="home-page">
+  <header class="home-header">Buscador de películas</header>
+  <main class="home-main">
+    <h1 class="logo" aria-label="Google Movies"><span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span><small>Movies</small></h1>
+    <form class="home-form" action="/search" method="GET" role="search">
+      <label class="visually-hidden" for="q">Título de la película</label>
+      <div class="search-box">
+        <span class="search-icon" aria-hidden="true">⌕</span>
+        <input type="search" id="q" name="q" placeholder="Busca una película" required autofocus>
+      </div>
+      <button type="submit">Buscar película</button>
+    </form>
+    <p class="hint">Prueba con Avatar, The Avengers o Interstellar.</p>
+  </main>
+  <footer>Google Movies · Práctica de Express y EJS</footer>
 </body>
 </html>

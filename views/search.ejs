@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= q ? q + ' - ' : '' %>Google Movies</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="results-header">
+    <a class="logo logo-small" href="/googlemovies" aria-label="Google Movies, inicio"><span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span><small>Movies</small></a>
+    <form class="results-form" action="/search" method="GET" role="search">
+      <label class="visually-hidden" for="q">Título de la película</label>
+      <div class="search-box">
+        <input type="search" id="q" name="q" value="<%= q %>" placeholder="Busca una película" required>
+        <button type="submit">Buscar</button>
+      </div>
+    </form>
+  </header>
+  <nav class="results-tabs" aria-label="Tipo de resultados"><span aria-current="page">Películas</span></nav>
+  <main class="results-main">
+    <% if (!q) { %>
+      <h1 class="message-title">Busca una película</h1>
+      <p>Escribe un título en el buscador para consultar el catálogo.</p>
+    <% } else if (results.length === 0) { %>
+      <h1 class="message-title">No se han encontrado resultados para «<%= q %>».</h1>
+      <p>Comprueba el título o prueba con una parte del nombre.</p>
+    <% } else { %>
+      <h1 class="results-count"><%= results.length %> <%= results.length === 1 ? 'resultado' : 'resultados' %> para «<%= q %>»</h1>
+      <% results.forEach(film => { %>
+        <article class="film-result">
+          <p class="result-source">Google Movies <span>› Catálogo de películas</span></p>
+          <h2><%= film.Title %></h2>
+          <p class="film-year"><strong>Año:</strong> <%= film.Year %></p>
+          <p class="film-plot"><strong>Trama:</strong> <%= film.Plot %></p>
+          <h3>Imágenes de <%= film.Title %></h3>
+          <div class="film-images">
+            <% if (film.Poster && film.Poster !== 'N/A') { %>
+              <img class="film-poster" src="<%= film.Poster %>" alt="Cartel de <%= film.Title %>" loading="lazy">
+            <% } %>
+            <% (film.Images || []).forEach((image, index) => { %>
+              <img src="<%= image %>" alt="<%= film.Title %> - imagen <%= index + 1 %>" loading="lazy">
+            <% }); %>
+          </div>
+        </article>
+      <% }); %>
+    <% } %>
+  </main>
+  <footer>Google Movies · Datos de films.json</footer>
+</body>
+</html>
