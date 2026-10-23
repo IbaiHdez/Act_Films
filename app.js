@@ -1,36 +1,49 @@
+// Práctica de Express: buscador de películas
 const express = require('express');
 const path = require('path');
 const films = require('./films.json');
 
 const app = express();
-const port = process.env.PORT || 3000;
 
+// Configuro EJS para las vistas y la carpeta public para el CSS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// La página de inicio y /googlemovies muestran el mismo formulario.
-app.get(['/', '/googlemovies'], (req, res) => {
+// Página de inicio
+app.get('/', function (req, res) {
   res.render('googlemovies');
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.get('/search', (req, res) => {
-  // El formulario envía el título en la query string: /search?q=Avatar.
-  const q = typeof req.query.q === 'string' ? req.query.q.trim() : '';
-  const results = q
-    ? Object.values(films).filter(film =>
-        film.Title.toLowerCase().includes(q.toLowerCase())
-      )
-    : [];
-
-  res.render('search', { q, results });
+// La misma página, pero entrando por /googlemovies
+app.get('/googlemovies', function (req, res) {
+  res.render('googlemovies');
 });
 
-if (require.main === module) {
-  app.listen(port, () => {
-    console.log(`Google Movies disponible en http://localhost:${port}`);
-  });
-}
+// Buscador: /search?q=avatar
+app.get('/search', function (req, res) {
+  let q = req.query.q;
 
-module.exports = app;
+  // Si no me llega nada, lo pongo vacío para que no falle
+  if (!q) {
+    q = '';
+  }
+
+  let results = [];
+
+  // Recorro todas las películas y me quedo con las que contienen el texto
+  for (let titulo in films) {
+    let film = films[titulo];
+
+    if (film.Title.toLowerCase().includes(q.toLowerCase())) {
+      results.push(film);
+    }
+  }
+
+  res.render('search', { q: q, results: results });
+});
+
+// Arranco el servidor
+app.listen(3000, function () {
+  console.log('Servidor arrancado en http://localhost:3000');
+});
